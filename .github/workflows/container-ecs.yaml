@@ -42,7 +42,8 @@ jobs:
     name: build & push
     needs: 
       - sonarqube
-      - clode_climate
+      - code_climate
+      - secret_scanning
 
     runs-on: ubuntu-latest
     environment: development
