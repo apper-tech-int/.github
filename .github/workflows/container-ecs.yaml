@@ -5,6 +5,8 @@ on:
     secrets:
       AWS_ACCESS_KEY_ID: 
       AWS_SECRET_ACCESS_KEY:
+      AWS_REGION:
+      AWS_ACCOUNT_ID:
 
 
 env:
@@ -28,12 +30,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}               
              
-
-      - name: Dump input secrets
-        run:   echo "$GITHUB_CONTEXT"
-        shell: bash
-        env:
-          GITHUB_CONTEXT: ${{ fromJSON(secrets) }}  
 
       - name: Debug
         run: |
