@@ -3,8 +3,8 @@ name: ci
 on:
   workflow_call:
     inputs: 
-      secrets:
-        description: 'Secrets toJSON'    
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}} 
 
 env:
   TAG_NAME: 282705446766.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
@@ -32,7 +32,7 @@ jobs:
         run:   echo "$GITHUB_CONTEXT"
         shell: bash
         env:
-          GITHUB_CONTEXT: ${{ fromJSON(inputs.secrets) }}  
+          GITHUB_CONTEXT: ${{ fromJSON(inputs) }}  
 
       - name: Debug
         run: |
@@ -40,14 +40,14 @@ jobs:
           printenv | sort
           echo " ######### "
           echo " ######### "
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "${{ inputs.AWS_ACCESS_KEY_ID }}"
+          echo "${{ inputs.AWS_SECRET_ACCESS_KEY }}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-access-key-id: ${{inputs.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{inputs.AWS_SECRET_ACCESS_KEY}}
           aws-region: "us-east-1"    
       
 
