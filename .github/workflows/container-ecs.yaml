@@ -15,6 +15,9 @@ env:
   TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
+  code_climate:
+    uses: bayer-int/actions-workflows/.github/workflows/trufflehog.yml@main
+    
   sonarqube:
     name: sonarqube
     runs-on: ubuntu-latest
@@ -36,6 +39,7 @@ jobs:
     name: build & push
     needs: 
       - sonarqube
+      - clode_climate
 
     runs-on: ubuntu-latest
     environment: development
