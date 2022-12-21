@@ -29,12 +29,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}               
              
 
-      - name: Dump input secrets
-        run:   echo "$GITHUB_CONTEXT"
-        shell: bash
-        env:
-          GITHUB_CONTEXT: ${{ fromJSON(secrets) }}  
-
       - name: Debug
         run: |
           echo " ######### "
