@@ -17,6 +17,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Dump github context
+        run:   echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}               
+
       - name: Debug
         run: |
           echo " ######### "
@@ -32,7 +38,6 @@ jobs:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: "us-east-1"    
-
       
 
       - name: Login to Amazon ECR
