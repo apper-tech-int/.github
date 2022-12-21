@@ -24,28 +24,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Dump github context
-        run:   echo "$GITHUB_CONTEXT"
-        shell: bash
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}               
+      # - name: Dump github context
+      #   run:   echo "$GITHUB_CONTEXT"
+      #   shell: bash
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}               
              
-
-      - name: Debug
-        run: |
-          echo " ######### "
-          printenv | sort
-          echo " ######### "
-          echo " ######### "
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: "us-east-1"    
+          aws-region: ${{secrets.AWS_REGION}}    
       
 
       - name: Login to Amazon ECR
@@ -54,7 +44,7 @@ jobs:
 
       - name: check ecr repository
         run: |
-          aws ecr describe-repositories --region us-east-1 --repository-names "${{ github.event.repository.name }}" || aws ecr create-repository --region us-east-1 --repository-name "${{ github.event.repository.name }}"
+          aws ecr describe-repositories --region ${{secrets.AWS_REGION}} --repository-names "${{ github.event.repository.name }}" || aws ecr create-repository --region ${{secrets.AWS_REGION}} --repository-name "${{ github.event.repository.name }}"
 
       - name: 'build container'
         run: |
