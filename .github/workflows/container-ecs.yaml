@@ -10,7 +10,7 @@ on:
 
 
 env:
-  TAG_NAME: 282705446766.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
+  TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
   build_and_push:
