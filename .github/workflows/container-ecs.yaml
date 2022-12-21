@@ -5,12 +5,10 @@ on:
     secrets:
       AWS_ACCESS_KEY_ID: 
       AWS_SECRET_ACCESS_KEY:
-      AWS_REGION: 
-      AWS_ACCOUNT_ID:
 
 
 env:
-  CONTAINER_TAG_NAME: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
+  TAG_NAME: 282705446766.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
   build_and_push:
@@ -24,18 +22,34 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # - name: Dump github context
-      #   run:   echo "$GITHUB_CONTEXT"
-      #   shell: bash
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}               
+      - name: Dump github context
+        run:   echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}               
              
+
+      - name: Dump input secrets
+        run:   echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ fromJSON(secrets) }}  
+
+      - name: Debug
+        run: |
+          echo " ######### "
+          printenv | sort
+          echo " ######### "
+          echo " ######### "
+          echo "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: "${{ secrets.AWS_REGION }}"
+          aws-region: "us-east-1"    
       
 
       - name: Login to Amazon ECR
@@ -44,12 +58,12 @@ jobs:
 
       - name: check ecr repository
         run: |
-          aws ecr describe-repositories --region "${{secrets.AWS_REGION}}" --repository-names "${{ github.event.repository.name }}" || aws ecr create-repository --region "${{secrets.AWS_REGION}}" --repository-name "${{ github.event.repository.name }}"
+          aws ecr describe-repositories --region us-east-1 --repository-names "${{ github.event.repository.name }}" || aws ecr create-repository --region us-east-1 --repository-name "${{ github.event.repository.name }}"
 
       - name: 'build container'
         run: |
           docker build \
-            -t ${{ env.CONTAINER_TAG_NAME }} \
+            -t ${{ env.TAG_NAME }} \
             --label github.repository=${{ github.event.repository.name }} \
             --label github.repositoryUrl=${{github.repositoryUrl}} \
             --label github.sha="${{github.sha}}" \
@@ -60,7 +74,7 @@ jobs:
 
       - name: 'push container'
         run: |
-          docker push "${{ env.CONTAINER_TAG_NAME }}"
+          docker push "${{ env.TAG_NAME }}"
 
   deploy_development:
     name: deploy development
