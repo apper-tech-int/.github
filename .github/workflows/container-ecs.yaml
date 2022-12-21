@@ -16,8 +16,8 @@ env:
 
 jobs:
   code_climate:
-    uses: bayer-int/actions-workflows/.github/workflows/trufflehog.yml@main
-    
+    uses: bayer-int/actions-workflows/.github/workflows/codeclimate.yml@main
+
   sonarqube:
     name: sonarqube
     runs-on: ubuntu-latest
