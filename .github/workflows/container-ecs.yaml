@@ -7,6 +7,7 @@ on:
       AWS_SECRET_ACCESS_KEY:
       AWS_REGION:
       AWS_ACCOUNT_ID:
+      SONAR_TOKEN:
 
 
 env:
