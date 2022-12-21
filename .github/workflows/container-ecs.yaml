@@ -13,21 +13,20 @@ env:
   TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
+  secret-scanning:
+    uses: bayer-int/actions-workflows/.github/workflows/trufflehog.yml@main
 
   sonarqube:
-    name: SonarQube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: bayer-int/actions-workflows/.github/workflows/sonarqube.yml@main
-        secrets:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    uses: bayer-int/actions-workflows/.github/workflows/sonarqube.yml@main
+    secrets:
+      token: ${{ secrets.SONAR_TOKEN }}
 
   build_and_push:
     name: build & push
-    needs: sonarqube
+    needs: 
+      - secret-scanning
+      - sonarqube
+      
     runs-on: ubuntu-latest
     environment: development
     steps:
