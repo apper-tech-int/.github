@@ -13,9 +13,6 @@ env:
   TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
-  secret-scanning:
-    uses: bayer-int/actions-workflows/.github/workflows/trufflehog.yml@main
-
   sonarqube:
     uses: bayer-int/actions-workflows/.github/workflows/sonarqube.yml@main
     secrets:
@@ -24,9 +21,8 @@ jobs:
   build_and_push:
     name: build & push
     needs: 
-      - secret-scanning
       - sonarqube
-      
+
     runs-on: ubuntu-latest
     environment: development
     steps:
