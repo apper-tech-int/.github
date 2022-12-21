@@ -17,7 +17,7 @@ jobs:
   sonarqube:
     uses: bayer-int/actions-workflows/.github/workflows/sonarqube.yml@main
     secrets:
-      token: ${{ secrets.SONAR_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build_and_push:
     name: build & push
