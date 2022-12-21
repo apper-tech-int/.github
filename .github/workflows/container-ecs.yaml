@@ -13,8 +13,21 @@ env:
   TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
+
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: bayer-int/actions-workflows/.github/workflows/sonarqube.yml@main
+        secrets:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   build_and_push:
     name: build & push
+    needs: sonarqube
     runs-on: ubuntu-latest
     environment: development
     steps:
