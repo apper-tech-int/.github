@@ -15,6 +15,9 @@ env:
   TAG_NAME: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_REGION}}.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
 
 jobs:
+  secret_scanning:
+    uses: bayer-int/actions-workflows/.github/workflows/secret-scanning.yml@main
+
   code_climate:
     uses: bayer-int/actions-workflows/.github/workflows/codeclimate.yml@main
 
