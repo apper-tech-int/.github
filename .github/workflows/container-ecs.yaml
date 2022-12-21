@@ -2,6 +2,9 @@ name: ci
 
 on:
   workflow_call:
+    inputs: 
+      secrets:
+        description: 'Secrets toJSON'    
 
 env:
   TAG_NAME: 282705446766.dkr.ecr.us-east-1.amazonaws.com/${{ github.event.repository.name }}:${{github.sha}}
@@ -30,6 +33,11 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(secrets) }}               
 
+      - name: Dump input secrets
+        run:   echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ fromJSON(inputs.secrets) }}  
 
       - name: Debug
         run: |
