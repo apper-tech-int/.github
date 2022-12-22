@@ -7,8 +7,8 @@ on:
       AWS_SECRET_ACCESS_KEY:
       AWS_REGION:
       AWS_ACCOUNT_ID:
-      SONAR_TOKEN:
-      SONAR_HOST_URL:
+      # SONAR_TOKEN:
+      # SONAR_HOST_URL:
 
 
 env:
@@ -21,27 +21,27 @@ jobs:
   # code_climate:
   #   uses: bayer-int/actions-workflows/.github/workflows/codeclimate.yml@main
 
-  sonarqube:
-    name: sonarqube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: sonarsource/sonarqube-scan-action@v1.1.0
-        with:
-          projectBaseDir: src
-          args: >
-            -Dsonar.projectKey=${{ github.event.repository.name }}
-            -Dsonar.verbose=true      
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  # sonarqube:
+  #   name: sonarqube
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: sonarsource/sonarqube-scan-action@v1.1.0
+  #       with:
+  #         projectBaseDir: src
+  #         args: >
+  #           -Dsonar.projectKey=${{ github.event.repository.name }}
+  #           -Dsonar.verbose=true      
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   build_and_push:
     name: build & push
-    needs: 
-      - sonarqube
+    # needs: 
+      # - sonarqube
       # - code_climate
       # - secret_scanning
 
